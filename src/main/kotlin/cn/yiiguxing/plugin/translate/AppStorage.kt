@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.LanguagePair
 import cn.yiiguxing.plugin.translate.util.trimToSize
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
@@ -28,6 +29,12 @@ class AppStorage : PersistentStateComponent<AppStorage> {
     @MapAnnotation
     private val languageScores: MutableMap<Lang, Int> = HashMap()
 
+    val lastLanguages: LanguagePair = LanguagePair()
+
+    val lastInstantLanguages: LanguagePair = LanguagePair()
+
+    var lastReplacementTargetLanguage: Lang? = null
+
     /**
      * 最大历史记录长度
      */
@@ -42,7 +49,7 @@ class AppStorage : PersistentStateComponent<AppStorage> {
 
     @Transient
     private val dataChangePublisher: HistoriesChangedListener =
-            ApplicationManager.getApplication().messageBus.syncPublisher(HistoriesChangedListener.TOPIC)
+        ApplicationManager.getApplication().messageBus.syncPublisher(HistoriesChangedListener.TOPIC)
 
     override fun getState(): AppStorage = this
 
@@ -60,6 +67,15 @@ class AppStorage : PersistentStateComponent<AppStorage> {
      */
     fun setLanguageScore(lang: Lang, score: Int) {
         languageScores[lang] = score
+    }
+
+    /**
+     * 增加语言常用评分
+     */
+    fun accumulateLanguageScore(lang: Lang) {
+        if (lang != Lang.AUTO) {
+            languageScores[lang] = languageScores.getOrDefault(lang, 0) + 1
+        }
     }
 
     private fun trimHistoriesSize(maxSize: Int) {
@@ -131,9 +147,7 @@ interface HistoriesChangedListener {
     fun onHistoryItemChanged(newHistory: String)
 
     companion object {
-        val TOPIC: Topic<HistoriesChangedListener> = Topic.create(
-                "TranslateHistoriesChanged",
-                HistoriesChangedListener::class.java
-        )
+        val TOPIC: Topic<HistoriesChangedListener> =
+            Topic.create("TranslateHistoriesChanged", HistoriesChangedListener::class.java)
     }
 }

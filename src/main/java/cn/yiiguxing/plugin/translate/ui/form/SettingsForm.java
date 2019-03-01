@@ -2,6 +2,8 @@ package cn.yiiguxing.plugin.translate.ui.form;
 
 import cn.yiiguxing.plugin.translate.AppStorage;
 import cn.yiiguxing.plugin.translate.Settings;
+import cn.yiiguxing.plugin.translate.TTSSource;
+import cn.yiiguxing.plugin.translate.TargetLanguageSelection;
 import cn.yiiguxing.plugin.translate.ui.settings.TranslatorSettingsContainer;
 import cn.yiiguxing.plugin.translate.util.SelectionMode;
 import com.intellij.openapi.project.Project;
@@ -9,6 +11,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.FontComboBox;
+import com.intellij.ui.components.JBCheckBox;
 import org.intellij.lang.regexp.RegExpLanguage;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,6 +25,8 @@ public class SettingsForm {
     private JPanel mWholePanel;
     private JPanel mTranslateSettingsPanel;
     private ComboBox<SelectionMode> mSelectionMode;
+    private ComboBox<TargetLanguageSelection> mTargetLangSelectionComboBox;
+    private JTextField mSeparatorsTextField;
     private EditorTextField mIgnoreRegExp;
     private JButton mCheckIgnoreRegExpButton;
     private JLabel mIgnoreRegExpMsg;
@@ -29,7 +34,7 @@ public class SettingsForm {
     private ComboBox mMaxHistoriesSize;
     private JButton mClearHistoriesButton;
     private JPanel mFontPanel;
-    private JCheckBox mFontCheckBox;
+    private JBCheckBox mFontCheckBox;
     private FontComboBox mPrimaryFontComboBox;
     private FontComboBox mPhoneticFontComboBox;
     private JTextPane mFontPreview;
@@ -37,9 +42,14 @@ public class SettingsForm {
     private JLabel mPhoneticFontLabel;
     private TranslatorSettingsContainer mTransPanelContainer;
     private JPanel mOptionsPanel;
-    private JCheckBox mShowStatusIconCheckBox;
-    private JCheckBox mFoldOriginalCheckBox;
-    private JCheckBox mKeepFormat;
+    private JBCheckBox mShowStatusIconCheckBox;
+    private JBCheckBox mFoldOriginalCheckBox;
+    private JBCheckBox mKeepFormatCheckBox;
+    private JBCheckBox mAutoPlayTTSCheckBox;
+    private ComboBox<TTSSource> mTTSSourceComboBox;
+    private JBCheckBox mShowWordFormsCheckBox;
+    private JBCheckBox mAutoReplaceCheckBox;
+    private JBCheckBox mSelectTargetLanguageCheckBox;
 
     private final Settings mSettings;
     private final AppStorage mAppStorage;
@@ -98,6 +108,16 @@ public class SettingsForm {
     }
 
     @NotNull
+    public final ComboBox<TargetLanguageSelection> getTargetLangSelectionComboBox() {
+        return mTargetLangSelectionComboBox;
+    }
+
+    @NotNull
+    public final JTextField getSeparatorsTextField() {
+        return mSeparatorsTextField;
+    }
+
+    @NotNull
     public final EditorTextField getIgnoreRegExp() {
         return mIgnoreRegExp;
     }
@@ -133,7 +153,7 @@ public class SettingsForm {
     }
 
     @NotNull
-    public final JCheckBox getFontCheckBox() {
+    public final JBCheckBox getFontCheckBox() {
         return mFontCheckBox;
     }
 
@@ -173,17 +193,42 @@ public class SettingsForm {
     }
 
     @NotNull
-    public final JCheckBox getShowStatusIconCheckBox() {
+    public final JBCheckBox getShowStatusIconCheckBox() {
         return mShowStatusIconCheckBox;
     }
 
     @NotNull
-    public final JCheckBox getFoldOriginalCheckBox() {
+    public final JBCheckBox getFoldOriginalCheckBox() {
         return mFoldOriginalCheckBox;
     }
 
     @NotNull
-    public final JCheckBox getKeepFormatCheckBox() {
-        return mKeepFormat;
+    public final JBCheckBox getKeepFormatCheckBox() {
+        return mKeepFormatCheckBox;
+    }
+
+    @NotNull
+    public final JBCheckBox getAutoPlayTTSCheckBox() {
+        return mAutoPlayTTSCheckBox;
+    }
+
+    @NotNull
+    public final ComboBox<TTSSource> getTTSSourceComboBox() {
+        return mTTSSourceComboBox;
+    }
+
+    @NotNull
+    public final JBCheckBox getShowWordFormsCheckBox() {
+        return mShowWordFormsCheckBox;
+    }
+
+    @NotNull
+    public final JBCheckBox getAutoReplaceCheckBox() {
+        return mAutoReplaceCheckBox;
+    }
+
+    @NotNull
+    public final JBCheckBox getSelectTargetLanguageCheckBox() {
+        return mSelectTargetLanguageCheckBox;
     }
 }

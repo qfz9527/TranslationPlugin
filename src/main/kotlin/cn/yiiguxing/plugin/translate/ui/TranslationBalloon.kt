@@ -46,9 +46,7 @@ class TranslationBalloon(
     private val translationContentPane = NonOpaquePanel(FrameLayout())
     private val translationPane = BalloonTranslationPanel(project, Settings)
     private val pinButton = ActionLink(icon = Icons.Pin) {
-        translationPane.translation.let {
-            showOnTranslationDialog(text, translationPane.sourceLanguage, translationPane.targetLanguage)
-        }
+        showOnTranslationDialog(text, translationPane.sourceLanguage, translationPane.targetLanguage)
     }
     private val copyErrorLink = ActionLink(icon = Icons.CopyToClipboard) {
         lastError?.copyToClipboard()
@@ -125,7 +123,12 @@ class TranslationBalloon(
 
     private fun initActions() = with(translationPane) {
         onRevalidate { if (!disposed) balloon.revalidate() }
-        onLanguageChanged { src, target -> translate(src, target) }
+        onLanguageChanged { src, target ->
+            run {
+                presenter.updateLastLanguages(src, target)
+                translate(src, target)
+            }
+        }
         onNewTranslate { text, src, target ->
             invokeLater { showOnTranslationDialog(text, src, target) }
         }
@@ -214,7 +217,7 @@ class TranslationBalloon(
             editor.scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
             balloon.show(tracker, position)
 
-            val targetLang = if (text.any { it.toInt() > 0xFF }) Lang.ENGLISH else presenter.primaryLanguage
+            val targetLang = presenter.getTargetLang(text)
             translate(Lang.AUTO, targetLang)
         }
     }
